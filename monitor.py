@@ -2,27 +2,27 @@ import pickle
 import numpy as np 
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-from glob import glob
+
 import os
+from pathlib import Path
 
 def pick_file():
-    files = sorted(glob("data/*.pickle"))
+    #files = sorted(glob("data/*.pickle"))
+    files = sorted(list(Path('data').glob('**/*.pickle')))
+
     print("Pick a file to monitor")
     for x in enumerate(files):
         print("[%d] %s" % x)
 
-    return files[int(input())]
+    return files[int(input("\n> "))]
 
-def monitor():
-    
-    file = pick_file()
-    
+def run_animation(filename):
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
-
+    
     def animate(i):
         try:
-            with open(file, "rb") as f:
+            with open(filename, "rb") as f:
                 data = pickle.load(f)
                 ax.clear()
                 for label in data:
@@ -30,9 +30,14 @@ def monitor():
                 ax.legend()
         except Exception:
             pass
-
+    
     ani = animation.FuncAnimation(fig, animate, interval=1000)
     plt.show()
 
+def main():
+    
+    filename = pick_file()
+    run_animation(filename)
+
 if __name__ == "__main__":
-    monitor()
+    main()

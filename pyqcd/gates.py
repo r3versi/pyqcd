@@ -1,5 +1,6 @@
 import typing
 import numpy as np
+import sympy as sp
 
 from . import matrices
 
@@ -14,7 +15,11 @@ Matrix repr. of CX 0 1 (where 0 is control and 1 target):
 """
 
 class Gate(object):
-    def __init__(self, name: str, n_qubits: int, params: typing.Optional[typing.Sequence[float]] = None) -> None:
+    def __init__(self, 
+                 name: str, 
+                 n_qubits: int, 
+                 params: typing.Optional[typing.Sequence[typing.Union[float, sp.Symbol]]] = None) -> None:
+        
         self.name = name
 
         self.n_qubits = n_qubits
@@ -44,7 +49,10 @@ class I(Gate):
     def __init__(self) -> None:
         super().__init__("id", 1, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.I)
+
         return matrices.I
 
 class X(Gate):
@@ -54,8 +62,12 @@ class X(Gate):
     def __init__(self) -> None:
         super().__init__("x", 1, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.X)
+
         return matrices.X
+
 
 class Y(Gate):
     name = "y"
@@ -64,8 +76,12 @@ class Y(Gate):
     def __init__(self) -> None:
         super().__init__("y", 1, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.Y)
+
         return matrices.Y
+
 
 class Z(Gate):
     name = "z"
@@ -74,8 +90,12 @@ class Z(Gate):
     def __init__(self) -> None:
         super().__init__("z", 1, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.Z)
+
         return matrices.Z
+
 
 class H(Gate):
     name = "h"
@@ -84,8 +104,12 @@ class H(Gate):
     def __init__(self) -> None:
         super().__init__("h", 1, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.H)
+
         return matrices.H
+
 
 class T(Gate):
     name = "t"
@@ -95,8 +119,12 @@ class T(Gate):
     def __init__(self) -> None:
         super().__init__("t", 1, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.T)
+
         return matrices.T
+
 
 class Tdg(Gate):
     name = "tdg"
@@ -106,8 +134,12 @@ class Tdg(Gate):
     def __init__(self) -> None:
         super().__init__("tdg", 1, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.Tdg)
+
         return matrices.Tdg
+
 
 
 class S(Gate):
@@ -118,8 +150,12 @@ class S(Gate):
     def __init__(self) -> None:
         super().__init__("s", 1, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.S)
+
         return matrices.S
+
 
 class Sdg(Gate):
     name = "sdg"
@@ -129,8 +165,12 @@ class Sdg(Gate):
     def __init__(self) -> None:
         super().__init__("sdg", 1, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.Sdg)
+
         return matrices.Sdg
+
 
 class V(Gate):
     name = "v"
@@ -140,8 +180,12 @@ class V(Gate):
     def __init__(self) -> None:
         super().__init__("v", 1, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.V)
+
         return matrices.V
+
 
 class Vdg(Gate):
     name = "vdg"
@@ -151,8 +195,12 @@ class Vdg(Gate):
     def __init__(self) -> None:
         super().__init__("vdg", 1, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.Vdg)
+
         return matrices.Vdg
+
 
 
 class U1(Gate):
@@ -163,8 +211,13 @@ class U1(Gate):
     def __init__(self, a: float):
         super().__init__("u1", 1, [a])
 
-    def to_matrix(self) -> np.ndarray:
-        a = float(self.params[0])
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        a = self.params[0]
+        if to_sympy:
+            return sp.Matrix([
+                [1, 0],
+                [0, sp.exp(sp.I * a)]])
+
         return np.array(
             [
                 [1, 0],
@@ -180,8 +233,15 @@ class U2(Gate):
     def __init__(self, a: float, b: float):
         super().__init__("u2", 1, [a, b])
 
-    def to_matrix(self) -> np.ndarray:
-        a, b = [float(x) for x in self.params]
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        a, b = self.params[0], self.params[1]
+        if to_sympy:
+            return 1/sp.sqrt(2)*sp.Matrix(
+                [
+                    [1,                 -sp.exp(sp.I * b)],
+                    [sp.exp(sp.I * a),    sp.exp(sp.I * (a + b))]
+                ])
+
         return 1/np.sqrt(2)*np.array(
             [
                 [1,                 -np.exp(1j * b)],
@@ -196,8 +256,15 @@ class U3(Gate):
     def __init__(self, a: float, b: float, c: float):
         super().__init__("u3", 1, [a,b,c])
     
-    def to_matrix(self) -> np.ndarray:
-        a, b, c = [float(x) for x in self.params]
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        a, b, c = self.params[0], self.params[1], self.params[2]
+        if to_sympy:
+            return sp.Matrix(
+                [
+                    [sp.cos(a / 2),                    -sp.exp(sp.I * c) * sp.sin(a / 2)],
+                    [sp.exp(sp.I * b) * sp.sin(a / 2),   sp.exp(sp.I * (b + c)) * sp.cos(a / 2)]
+                ])
+
         return np.array(
             [
                 [np.cos(a / 2),                    -np.exp(1j * c) * np.sin(a / 2)],
@@ -213,7 +280,10 @@ class CX(Gate):
     def __init__(self) -> None:
         super().__init__("cx", 2, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.CX)
+
         return matrices.CX
 
 class CZ(Gate):
@@ -224,7 +294,10 @@ class CZ(Gate):
     def __init__(self) -> None:
         super().__init__("cz", 2, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.CZ)
+
         return matrices.CZ
 
 
@@ -236,5 +309,8 @@ class CCX(Gate):
     def __init__(self) -> None:
         super().__init__("ccx", 3, [])
 
-    def to_matrix(self) -> np.ndarray:
+    def to_matrix(self, to_sympy: bool = False) -> typing.Union[np.ndarray, sp.Matrix]:
+        if to_sympy:
+            return sp.Matrix(matrices.CCX)
+
         return matrices.CCX

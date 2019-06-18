@@ -4,7 +4,6 @@ import copy
 def object_einsum(string, *arrays):
     """Simplified object einsum, not as much error checking
         https://gist.github.com/seberg/5236560
-
     does not support "..." or list input and will see "...", etc. as three times
     an axes identifier, tries normal einsum first!
     

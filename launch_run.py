@@ -17,6 +17,8 @@ def main():
 
     # Instantiate the search class
     solver = GLOA(target=target, alphabet=alphabet, n_groups=50, group_size=5, circuit_size=15)
+    #solver = GA(target=target, alphabet=alphabet, pop_size=50, circuit_size=15)
+    #solver = MC(target=target, alphabet=alphabet, circuit_size=15)
 
     # Instantiate the logger class to keep track of fitness evolution
     logger = Logger("data/%s_%s_QFT2.pickle" % (int(time()), solver.__class__.__name__), True)

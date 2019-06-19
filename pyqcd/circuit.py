@@ -79,16 +79,21 @@ class Circuit(object):
                 UC.add_two_qubits(i.to_matrix(), *i.qubits)
         return UC.to_matrix()
 
-    def to_qiskit_circuit(self) -> QuantumCircuit:
+    def to_qasm(self) -> str:
+        """Return circuit as QASM string"""
         qasm_str = "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[%d];\n" % self.Q
 
         for i in self.instructions:
             qasm_str += "%s" % i.gate.name
             if i.gate.n_params:
-                qasm_str += "(%s) " % (','.join("%0.2f" %p for p in i.params))
+                qasm_str += "(%s) " % (','.join("%0.2f" % p for p in i.params))
             qasm_str += " %s;\n" % (','.join("q[%d]" % q for q in i.qubits))
+        
+        return qasm_str
 
-        return QuantumCircuit.from_qasm_str(qasm_str)
+    def to_qiskit_circuit(self) -> QuantumCircuit:
+        """Return qiskit.QuantumCircuit"""
+        return QuantumCircuit.from_qasm_str(self.to_qasm())
 
     def __str__(self) -> str:
         return str(self.to_qiskit_circuit())

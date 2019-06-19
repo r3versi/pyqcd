@@ -38,6 +38,8 @@ def main():
     print("%s" % solver.best)
     print("=============================")
 
+    with open('best.qasm','w') as f:
+        f.write(solver.best.to_qasm())
     
 if __name__ == "__main__":
     main()

@@ -93,14 +93,23 @@ class GA(BaseSearch):
             idx = np.random.randint(len(p))
             p.instructions.pop(idx)
         elif mode is 1:
-            # CHANGE random instruction
+            # CHANGE random instruction idx
             idx = np.random.randint(len(p))
-            p.instructions[idx] = self.alphabet.get_random()[0]
-            #if p.instructions[idx].gate.n_params != 0:
-            #    p.instructions[idx].params = np.random.rand(
-            #        p.instructions[idx].gate.n_params)*2*np.pi
-            #else:
-            #    p.instructions[idx] = self.alphabet.get_random()[0]
+
+            # Mutation mode
+            mut_mode = np.random.randint(3)
+
+            if mut_mode is 0:
+                # NEW instruction
+                p.instructions[idx] = self.alphabet.get_random()[0]
+            elif mut_mode is 1:
+                # QUBITS mutation
+                qubits = self.alphabet.get_random_qubits(p.instructions[idx].gate.n_qubits)
+                p.instructions[idx].qubits = qubits
+            else:
+                # PARAMS mutation
+                params = self.alphabet.get_random_angles(p.instructions[idx].gate.n_params)
+                p.instructions[idx].params = params
         else:
             # INSERT random instruction in random position
             idx = np.random.randint(len(p)+1)

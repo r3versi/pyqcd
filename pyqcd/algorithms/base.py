@@ -28,6 +28,7 @@ class BaseSearch:
 
             self.best = None
             self.gen = 0
+            self.n_evals = 0
 
     def matrix_distance(self, circuit: Circuit) -> float:
         return self.mat_dist(circuit.to_matrix(), self.target)
@@ -36,6 +37,7 @@ class BaseSearch:
         return 0
 
     def fitness(self, circuit: Circuit) -> float:
+        self.n_evals += 1
         return self.matrix_distance(circuit) + self.circuit_cost(circuit)
 
     def get_random_circuit(self) -> Circuit:

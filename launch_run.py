@@ -34,6 +34,7 @@ def main():
 
     print("=============================")
     print("Generations %d" % solver.gen)
+    print("Fitness evals %d" % solver.n_evals)
     print("Score %0.2f" % solver.best.score)
     print("%s" % solver.best)
     print("=============================")

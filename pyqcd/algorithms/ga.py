@@ -89,18 +89,22 @@ class GA(BaseSearch):
         mode = np.random.randint(3)
 
         if mode is 0:
+            # DELETE random instruction
             idx = np.random.randint(len(p))
             p.instructions.pop(idx)
         elif mode is 1:
+            # CHANGE random instruction
             idx = np.random.randint(len(p))
-            if p.instructions[idx].gate.n_params != 0:
-                p.instructions[idx].params = np.random.rand(
-                    p.instructions[idx].gate.n_params)*2*np.pi
-            else:
-                p.instructions[idx] = self.alphabet.get_random()[0]
-
+            p.instructions[idx] = self.alphabet.get_random()[0]
+            #if p.instructions[idx].gate.n_params != 0:
+            #    p.instructions[idx].params = np.random.rand(
+            #        p.instructions[idx].gate.n_params)*2*np.pi
+            #else:
+            #    p.instructions[idx] = self.alphabet.get_random()[0]
         else:
-            p.instructions.append(self.alphabet.get_random()[0])
+            # INSERT random instruction in random position
+            idx = np.random.randint(len(p)+1)
+            p.instructions.insert(idx, self.alphabet.get_random()[0])
 
         return p
 
@@ -113,6 +117,7 @@ class GA(BaseSearch):
         return p0, p1
 
     def roulette_selection(self, n: int = 1) -> Circuit:
+        #BUG: yields incorrect selection for minimizing problems
         scores = [x.score for x in self.pop]
         return np.random.choice(self.pop, size=n, p=scores/np.sum(scores))
 

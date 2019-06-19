@@ -26,6 +26,12 @@ class Alphabet(object):
             if gate not in self.gates:
                 self.gates.append(gate)
 
+    def get_random_qubits(self, n: int) -> typing.Sequence[int]:
+        return np.random.choice(np.arange(self.Q), size=n, replace=False)
+
+    def get_random_angles(self, n: int) -> typing.Sequence[float]:
+        return np.random.rand(n)*2*np.pi
+
     def get_random(self, n: int = 1) -> typing.List[Instruction]:
         """Get a random instruction from register
 
@@ -38,8 +44,8 @@ class Alphabet(object):
         out = []
         for _ in range(n):
             gate = np.random.choice(self.gates)
-            qubits = np.random.choice(np.arange(self.Q), size=gate.n_qubits, replace=False)
-            params = np.random.rand(gate.n_params)*2*np.pi
+            qubits = self.get_random_qubits(gate.n_qubits)
+            params = self.get_random_angles(gate.n_params)
             out.append(Instruction(gate, qubits, params))
 
         return out

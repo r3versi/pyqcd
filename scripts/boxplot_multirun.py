@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import os
 from pathlib import Path
 
-solvers = ["GA", "GLOA"]
+solvers = ["GA", "GLOA", "MLOA"]
 results = {}
 
 for solver in solvers:

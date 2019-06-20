@@ -23,8 +23,8 @@ def main():
 
         start_time = int(time())
 
-        #solver = GLOA(target=target, alphabet=alphabet, n_groups=50, group_size=5, circuit_size=15)
-        solver = GA(target=target, alphabet=alphabet, pop_size=50, circuit_size=15)
+        solver = MLOA(target=target, alphabet=alphabet, n_groups=50, group_size=5, circuit_size=15)
+        #solver = GA(target=target, alphabet=alphabet, pop_size=50, circuit_size=15)
         # Instantiate the logger class to keep track of fitness evolution
         
         logger = Logger("data/%s/%s_%s%d.pickle" %

@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import os
 from pathlib import Path
 
-solvers = ["GA", "GLOA"]
-colors = ["blue", "orange"]
+solvers = ["GA", "GLOA", "MLOA"]
+colors = ["blue", "orange", "red"]
 
 fig, ax = plt.subplots()
 

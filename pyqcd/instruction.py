@@ -21,6 +21,14 @@ class Instruction:
         self.qubits = qubits
         self.params = params
 
+    def n_qubits(self) -> int:
+        """Return number of qubits"""
+        return self.gate.n_qubits
+
+    def n_params(self):
+        """Return number of params"""
+        return self.gate.n_params
+
     def to_matrix(self) -> np.ndarray:
         """Return the matrix representation of the instruction"""
         if len(self.params):

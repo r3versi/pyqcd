@@ -31,7 +31,7 @@ def run_animation(filename):
                         continue
 
                     ax.plot(data[label], label=label)
-                ax.legend()
+                #ax.legend()
         except Exception:
             pass
     

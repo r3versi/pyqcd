@@ -63,8 +63,10 @@ class GA(BaseSearch):
             if np.random.rand() < self.mut_pb:
                 self.mutate(c1)
 
-            c0.score = self.fitness(c0)
-            c1.score = self.fitness(c1)
+            if c0.score is None:
+                c0.score = self.fitness(c0)
+            if c1.score is None:
+                c1.score = self.fitness(c1)
 
             # Applying elitism during selection
             if c0.score <= p0.score:
@@ -116,6 +118,8 @@ class GA(BaseSearch):
             idx = np.random.randint(len(p)+1)
             p.instructions.insert(idx, self.alphabet.get_random()[0])
 
+        p.score = None
+
         return p
 
     def mate(self, p0: Circuit, p1: Circuit) -> typing.Tuple[Circuit]:
@@ -123,6 +127,9 @@ class GA(BaseSearch):
         idx = np.random.randint(min(len(p0), len(p1)))
 
         p0.instructions[:idx], p1.instructions[:idx] = p1.instructions[:idx], p0.instructions[:idx]
+
+        p0.score = None
+        p1.score = None
 
         return p0, p1
 

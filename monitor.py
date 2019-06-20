@@ -26,6 +26,10 @@ def run_animation(filename):
                 data = pickle.load(f)
                 ax.clear()
                 for label in data:
+                    #HACK: show only fitness during monitor
+                    if "fit" not in label:
+                        continue
+
                     ax.plot(data[label], label=label)
                 ax.legend()
         except Exception:

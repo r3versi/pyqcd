@@ -34,7 +34,8 @@ class GA(BaseSearch):
         res = {}
         res['best_fit'] = self.best.score if self.best is not None else None
         res['mean_fit'] = np.mean([x.score for x in self.pop])
-        #res['mean_len'] = np.mean([len(x) for x in self.pop])
+        res['mean_len'] = np.mean([len(x) for x in self.pop])
+        res['n_evals']  = self.n_evals
         return res
 
     def evolve(self) -> None:

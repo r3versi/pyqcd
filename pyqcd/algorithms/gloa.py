@@ -42,6 +42,7 @@ class GLOA(BaseSearch):
 
         for idx, group in enumerate(self.groups):
             res["mean_fit_%d"%idx] = np.mean([x.score for x in group])
+        res['n_evals'] = self.n_evals
         return res
 
     def evolve(self) -> None:

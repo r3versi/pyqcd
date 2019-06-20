@@ -19,6 +19,7 @@ class MC(BaseSearch):
     def stats(self) -> typing.Dict:
         res = {}
         res['best_fit'] = self.best.score if self.best is not None else None
+        res['n_evals'] = self.n_evals
         return res
 
     def evolve(self) -> None:

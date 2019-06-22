@@ -1,16 +1,16 @@
-import pickle
-import numpy as np
-import matplotlib.pyplot as plt
-
 import os
+import pickle
 from pathlib import Path
 
-solvers = ["GA", "GLOA", "MLOA"]
-colors = ["blue", "orange", "red"]
+import matplotlib.pyplot as plt
+import numpy as np
+
+solvers = ["GA", "GLOA", "MLOA", "MLOA2"]
+colors = ["blue", "orange", "red", "green"]
 
 fig, ax = plt.subplots()
 
-for color,solver in zip(colors,solvers):
+for color, solver in zip(colors, solvers):
     files = sorted(list(Path('../data').glob('%s/*.pickle' % solver)))
     for file in files:
         with open(file, 'rb') as f:
@@ -18,7 +18,7 @@ for color,solver in zip(colors,solvers):
             x = data['n_evals']
             y = data['best_fit']
 
-            ax.plot(x,y,label=solver, color=color)
+            ax.plot(x, y, label=solver, color=color)
 
 ax.set_title("QFT 2 - 100k evals - 4 runs")
 ax.legend()

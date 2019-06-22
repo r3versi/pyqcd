@@ -1,8 +1,9 @@
 import numpy as np
 
+
 def tr_distance(a: np.ndarray, b: np.ndarray) -> float:
     """Computes 1 - 1/2^n |Tr[A_dag B]|
-    
+
     Arguments:
         a, b {np.ndarray} -- unitary matrices
     Returns:

@@ -1,10 +1,11 @@
-from pyqcd.alphabet import Alphabet
-from pyqcd.gates import I, U3, CX
+from time import time
+
 from pyqcd.algorithms import *
+from pyqcd.alphabet import Alphabet
+from pyqcd.gates import CX, U3, I
 from pyqcd.logger import Logger
 from pyqcd.matrices import QFT
 
-from time import time
 
 def main():
     """Submit several runs"""
@@ -23,10 +24,11 @@ def main():
 
         start_time = int(time())
 
-        solver = MLOA(target=target, alphabet=alphabet, n_groups=50, group_size=5, circuit_size=15)
+        solver = MLOA(target=target, alphabet=alphabet,
+                      n_groups=50, group_size=5, circuit_size=15)
         #solver = GA(target=target, alphabet=alphabet, pop_size=50, circuit_size=15)
         # Instantiate the logger class to keep track of fitness evolution
-        
+
         logger = Logger("data/%s/%s_%s%d.pickle" %
                         (solver.__class__.__name__, start_time, target_name, qubits), True)
         logger.add_variables(*solver.stats().keys())
@@ -39,7 +41,8 @@ def main():
             logger.register(**solver.stats())
 
         print("=============================")
-        print("%s %s%d #%d" % (solver.__class__.__name__, target_name, qubits, n_run))
+        print("%s %s%d #%d" %
+              (solver.__class__.__name__, target_name, qubits, n_run))
         print("Generations %d" % solver.gen)
         print("Fitness evals %d" % solver.n_evals)
         print("Score %0.5f" % solver.best.score)

@@ -1,10 +1,11 @@
-import pickle
-import numpy as np 
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-
 import os
+import pickle
 from pathlib import Path
+
+import matplotlib.animation as animation
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 def pick_file():
     #files = sorted(glob("data/*.pickle"))
@@ -16,32 +17,35 @@ def pick_file():
 
     return files[int(input("\n> "))]
 
+
 def run_animation(filename):
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
-    
+
     def animate(i):
         try:
             with open(filename, "rb") as f:
                 data = pickle.load(f)
                 ax.clear()
                 for label in data:
-                    #HACK: show only fitness during monitor
+                    # HACK: show only fitness during monitor
                     if "fit" not in label:
                         continue
 
                     ax.plot(data[label], label=label)
-                #ax.legend()
+                # ax.legend()
         except Exception:
             pass
-    
+
     ani = animation.FuncAnimation(fig, animate, interval=1000)
     plt.show()
 
+
 def main():
-    
+
     filename = pick_file()
     run_animation(filename)
+
 
 if __name__ == "__main__":
     main()

@@ -1,13 +1,15 @@
 from .base import *
 
+
 class MC(BaseSearch):
     """Vanilla MC search"""
+
     def __init__(self,
                  target: np.ndarray,
                  alphabet: Alphabet,
                  circuit_size: int,
                  mat_dist: typing.Callable = tr_distance) -> None:
-        """        
+        """
         Arguments:
             target {np.ndarray} -- unitary target
             alphabet {Alphabet} -- universal set alphabet

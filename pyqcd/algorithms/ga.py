@@ -1,7 +1,9 @@
 from .base import *
 
+
 class GA(BaseSearch):
     """Genetic Algorithm"""
+
     def __init__(self,
                  target: np.ndarray,
                  alphabet: Alphabet,
@@ -35,7 +37,7 @@ class GA(BaseSearch):
         res['best_fit'] = self.best.score if self.best is not None else None
         res['mean_fit'] = np.mean([x.score for x in self.pop])
         res['mean_len'] = np.mean([len(x) for x in self.pop])
-        res['n_evals']  = self.n_evals
+        res['n_evals'] = self.n_evals
         return res
 
     def evolve(self) -> None:
@@ -52,7 +54,7 @@ class GA(BaseSearch):
         np.random.shuffle(self.pop)
 
         for idx, (p0, p1) in enumerate(zip(self.pop[::2], self.pop[1::2])):
-            c0, c1 = deepcopy(p0), deepcopy(p1)
+            c0, c1 = p0.clone(), p1.clone()
 
             if np.random.rand() < self.cx_pb:
                 self.mate(c0, c1)
@@ -107,11 +109,13 @@ class GA(BaseSearch):
                 p.instructions[idx] = self.alphabet.get_random()[0]
             elif mut_mode is 1:
                 # QUBITS mutation
-                qubits = self.alphabet.get_random_qubits(p.instructions[idx].gate.n_qubits)
+                qubits = self.alphabet.get_random_qubits(
+                    p.instructions[idx].gate.n_qubits)
                 p.instructions[idx].qubits = qubits
             else:
                 # PARAMS mutation
-                params = self.alphabet.get_random_angles(p.instructions[idx].gate.n_params)
+                params = self.alphabet.get_random_angles(
+                    p.instructions[idx].gate.n_params)
                 p.instructions[idx].params = params
         else:
             # INSERT random instruction in random position
@@ -134,7 +138,7 @@ class GA(BaseSearch):
         return p0, p1
 
     def roulette_selection(self, n: int = 1) -> Circuit:
-        #BUG: yields incorrect selection for minimizing problems
+        # BUG: yields incorrect selection for minimizing problems
         scores = [x.score for x in self.pop]
         return np.random.choice(self.pop, size=n, p=scores/np.sum(scores))
 

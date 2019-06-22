@@ -1,10 +1,12 @@
 import typing
+
 import numpy as np
 
-from . import matrices
+from pyqcd import matrices
+
 
 """
-Matrices assume big endian basis ordering. So that \ket{q0}*\ket{q1} is represented as \ket{q1 q0}.
+Matrices assume big endian basis ordering. So that ket{q0}*ket{q1} is represented as ket{q1 q0}.
 2-qubit basis order: {00, 01, 10, 11}
 Matrix repr. of CX 0 1 (where 0 is control and 1 target):
 1 0 0 0
@@ -12,6 +14,7 @@ Matrix repr. of CX 0 1 (where 0 is control and 1 target):
 0 0 1 0
 0 1 0 0
 """
+
 
 class Gate(object):
     def __init__(self, name: str, n_qubits: int, params: typing.Optional[typing.Sequence[float]] = None) -> None:
@@ -33,59 +36,70 @@ class Gate(object):
 
     def to_matrix(self) -> np.ndarray:
         raise NotImplementedError
-    
+
     def __str__(self) -> str:
         return self.to_qasm()
+
 
 class I(Gate):
     name = "id"
     n_qubits = 1
     n_params = 0
+
     def __init__(self) -> None:
         super().__init__("id", 1, [])
 
     def to_matrix(self) -> np.ndarray:
         return matrices.I
 
+
 class X(Gate):
     name = "x"
     n_qubits = 1
     n_params = 0
+
     def __init__(self) -> None:
         super().__init__("x", 1, [])
 
     def to_matrix(self) -> np.ndarray:
         return matrices.X
 
+
 class Y(Gate):
     name = "y"
     n_qubits = 1
     n_params = 0
+
     def __init__(self) -> None:
         super().__init__("y", 1, [])
 
     def to_matrix(self) -> np.ndarray:
         return matrices.Y
 
+
 class Z(Gate):
     name = "z"
     n_qubits = 1
     n_params = 0
+
     def __init__(self) -> None:
         super().__init__("z", 1, [])
 
     def to_matrix(self) -> np.ndarray:
         return matrices.Z
 
+
 class H(Gate):
     name = "h"
     n_qubits = 1
     n_params = 0
+
     def __init__(self) -> None:
         super().__init__("h", 1, [])
 
     def to_matrix(self) -> np.ndarray:
         return matrices.H
+
 
 class T(Gate):
     name = "t"
@@ -97,6 +111,7 @@ class T(Gate):
 
     def to_matrix(self) -> np.ndarray:
         return matrices.T
+
 
 class Tdg(Gate):
     name = "tdg"
@@ -121,6 +136,7 @@ class S(Gate):
     def to_matrix(self) -> np.ndarray:
         return matrices.S
 
+
 class Sdg(Gate):
     name = "sdg"
     n_qubits = 1
@@ -132,6 +148,7 @@ class Sdg(Gate):
     def to_matrix(self) -> np.ndarray:
         return matrices.Sdg
 
+
 class V(Gate):
     name = "v"
     n_qubits = 1
@@ -142,6 +159,7 @@ class V(Gate):
 
     def to_matrix(self) -> np.ndarray:
         return matrices.V
+
 
 class Vdg(Gate):
     name = "vdg"
@@ -193,15 +211,18 @@ class U3(Gate):
     name = "u3"
     n_qubits = 1
     n_params = 3
+
     def __init__(self, a: float, b: float, c: float):
-        super().__init__("u3", 1, [a,b,c])
-    
+        super().__init__("u3", 1, [a, b, c])
+
     def to_matrix(self) -> np.ndarray:
         a, b, c = [float(x) for x in self.params]
         return np.array(
             [
-                [np.cos(a / 2),                    -np.exp(1j * c) * np.sin(a / 2)],
-                [np.exp(1j * b) * np.sin(a / 2),   np.exp(1j * (b + c)) * np.cos(a / 2)]
+                [np.cos(a / 2),                    -
+                 np.exp(1j * c) * np.sin(a / 2)],
+                [np.exp(1j * b) * np.sin(a / 2),
+                 np.exp(1j * (b + c)) * np.cos(a / 2)]
             ], dtype=complex)
 
 
@@ -215,6 +236,7 @@ class CX(Gate):
 
     def to_matrix(self) -> np.ndarray:
         return matrices.CX
+
 
 class CZ(Gate):
     name = "cz"

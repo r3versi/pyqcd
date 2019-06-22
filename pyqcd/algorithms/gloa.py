@@ -1,5 +1,9 @@
 from .base import *
 
+from pyqcd.circuit import Circuit
+from pyqcd.instruction import Instruction
+
+
 class GLOA(BaseSearch):
     """Group Leader Optimization Algorithm
     based on papers https://arxiv.org/abs/1004.2242 and https://aip.scitation.org/doi/abs/10.1063/1.3575402
@@ -32,16 +36,16 @@ class GLOA(BaseSearch):
 
         self.groups = [[self.get_random_circuit()
                         for _ in range(self.group_size)] for _ in range(self.n_groups)]
-        
-        self.compute_fitness()
 
+        self.compute_fitness()
 
     def stats(self) -> typing.Dict:
         res = {}
         res['best_fit'] = self.best.score if self.best is not None else None
 
         for idx, group in enumerate(self.groups):
-            res["mean_fit_%d"%idx] = np.mean([x.score for x in group])
+            res["mean_fit_%d" % idx] = np.mean([x.score for x in group])
+
         res['n_evals'] = self.n_evals
         return res
 
@@ -81,35 +85,42 @@ class GLOA(BaseSearch):
     def migration(self) -> None:
         """Perform one-way-crossover: unidirectional migration between different groups"""
         t = np.random.randint(3*self.group_size*self.circuit_size//2 + 1)
-        for i in range(self.n_groups):
+        for x in range(self.n_groups):
+            # Migrate t genes towards group x
             for _ in range(t):
-                x = np.random.randint(self.n_groups)
-                k = np.random.randint(self.group_size)
-                pr = np.random.randint(self.circuit_size)
+                # Get gene k from individual j of group i
+                i = np.random.randint(self.n_groups)
+                j = np.random.randint(self.group_size)
+                k = np.random.randint(self.circuit_size)
 
-                new = deepcopy(self.groups[i][k])
-                new.instructions[pr] = deepcopy(
-                    self.groups[x][k].instructions[pr])
+                # Clone receiver and substitute an instruction
+                new = self.groups[x][j].clone()
+                new.instructions[k] = self.groups[i][j].instructions[k].clone()
                 new.score = self.fitness(new)
 
-                if new.score < self.groups[i][k].score:
-                    self.groups[i][k] = new
+                # Substitute the individual if new is fittest
+                if new.score < self.groups[x][j].score:
+                    self.groups[x][j] = new
 
     def combine(self, current: Circuit, leader: Circuit, random: Circuit) -> Circuit:
         """Generate a new circuit combining current, leader and random"""
-        instr = []
-        for ops in zip(current.instructions, leader.instructions, random.instructions):
-            if ops[0] == ops[1] and ops[0] == ops[2] and ops[0].n_params:
-                #Combine parameters arithmetically
-                params = np.array([x.params for x in ops])
+        p = Circuit(self.Q, [])
+        for instr in zip(current.instructions, leader.instructions, random.instructions):
+
+            if instr[0].n_params() > 0 and instr[0].gate == instr[1].gate and instr[0].gate == instr[2].gate:
+                # Combine parameters arithmetically
+                params = np.array([x.params for x in instr])
                 new_params = np.sum((params.T * self.weights).T, axis=0)
+                new_qubits = instr[np.random.choice(
+                    np.arange(3), p=self.weights)].qubits
 
-                instr.append(ops[0], np.random.choice(
-                    [x.qubits for x in ops], p=self.weights))
+                new_instr = Instruction(instr[0].gate, new_qubits, new_params)
+                p.append(new_instr)
             else:
-                instr.append(np.random.choice(ops, p=self.weights))
+                new_instr = np.random.choice(instr, p=self.weights).clone()
+                p.append(new_instr)
 
-        if len(instr) < len(current.instructions):
-            instr.extend(current.instructions[len(instr):])
+        while len(p) < len(current.instructions):
+            p.append(current.instructions[len(p)].clone())
 
-        return Circuit(self.Q, instr)
+        return p

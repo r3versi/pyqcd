@@ -1,10 +1,11 @@
 import typing
-import numpy as np
+from copy import deepcopy
 
+import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.providers.basicaer.basicaertools import einsum_matmul_index
 
-from .alphabet import Instruction
+from pyqcd.instruction import Instruction
 
 
 class UnitaryCircuit(object):
@@ -12,7 +13,7 @@ class UnitaryCircuit(object):
 
     def __init__(self, Q: int) -> None:
         """Initialize a unitary circuit
-        
+
         Arguments:
             Q {int} -- number of qubits
         """
@@ -33,7 +34,7 @@ class UnitaryCircuit(object):
 
     def add_two_qubits(self, gate: np.ndarray, qubit0: int, qubit1: int) -> None:
         """Append a 2-qubit gate
-        
+
         Arguments:
             gate {np.ndarray} -- matrix representation of the gate
             qubit0 {int} -- first target qubit
@@ -46,7 +47,7 @@ class UnitaryCircuit(object):
 
     def to_matrix(self) -> np.ndarray:
         """Matrix representation of the circuit
-        
+
         Returns:
             np.ndarray -- (2**Q,2**Q) unitary matrix
         """
@@ -55,9 +56,10 @@ class UnitaryCircuit(object):
 
 class Circuit(object):
     """Quantum circuit as a sequence of quantum instructions"""
+
     def __init__(self, Q: int, instructions: typing.Sequence[Instruction]) -> None:
         """Initialize a quantum circuit
-        
+
         Arguments:
             Q {int} -- number of qubits
             instructions {typing.Sequence[Instruction]} -- sequence of quantum instructions
@@ -65,6 +67,14 @@ class Circuit(object):
         self.Q = Q
         self.score = None
         self.instructions = instructions
+
+    def clone(self) -> "Circuit":
+        clone = Circuit(self.Q, deepcopy(self.instructions))
+        clone.score = self.score
+        return clone
+
+    def append(self, instruction: Instruction) -> None:
+        self.instructions.append(instruction)
 
     def __len__(self) -> int:
         return len(self.instructions)
@@ -88,7 +98,7 @@ class Circuit(object):
             if i.gate.n_params:
                 qasm_str += "(%s) " % (','.join("%0.2f" % p for p in i.params))
             qasm_str += " %s;\n" % (','.join("q[%d]" % q for q in i.qubits))
-        
+
         return qasm_str
 
     def to_qiskit_circuit(self) -> QuantumCircuit:

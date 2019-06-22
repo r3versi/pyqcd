@@ -1,11 +1,12 @@
+from time import time
+
+from pyqcd.algorithms import GA, GLOA, MC, MLOA
 from pyqcd.alphabet import Alphabet
-from pyqcd.algorithms import *
-from pyqcd.matrices import QFT, Identity
-from pyqcd.gates import I, U3, CX
+from pyqcd.gates import CX, U3, I
 from pyqcd.logger import Logger
 from pyqcd.math_utils import d2
+from pyqcd.matrices import QFT
 
-from time import time
 
 def main():
     # Quantum Fourier Transform on 4 qubits
@@ -16,12 +17,14 @@ def main():
     alphabet.register_gates([I, U3, CX])
 
     # Instantiate the search class
-    solver = MLOA(target=target, alphabet=alphabet, n_groups=50, group_size=5, circuit_size=15)
+    solver = MLOA(target=target, alphabet=alphabet,
+                  n_groups=2, group_size=1, circuit_size=15)
     #solver = GA(target=target, alphabet=alphabet, pop_size=50, circuit_size=15)
     #solver = MC(target=target, alphabet=alphabet, circuit_size=15)
 
     # Instantiate the logger class to keep track of fitness evolution
-    logger = Logger("data/%s_%s_QFT2.pickle" % (int(time()), solver.__class__.__name__), True)
+    logger = Logger("data/%s_%s_QFT2.pickle" %
+                    (int(time()), solver.__class__.__name__), True)
     logger.add_variables(*solver.stats().keys())
 
     # Main loop
@@ -39,8 +42,9 @@ def main():
     print("%s" % solver.best)
     print("=============================")
 
-    with open('best.qasm','w') as f:
+    with open('best.qasm', 'w') as f:
         f.write(solver.best.to_qasm())
-    
+
+
 if __name__ == "__main__":
     main()

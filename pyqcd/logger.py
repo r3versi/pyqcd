@@ -1,6 +1,7 @@
-import typing
-import numpy as np 
 import pickle
+import typing
+
+import numpy as np
 
 
 class Logger:
@@ -15,7 +16,7 @@ class Logger:
                 print(label, "already in", self.vars)
                 raise Exception
             self.vars[label] = []
-    
+
     def register(self, **kwargs) -> None:
         for label in kwargs:
             if label not in self.vars:
@@ -30,4 +31,3 @@ class Logger:
     def dump(self) -> None:
         with open(self.file, "wb") as f:
             pickle.dump(self.vars, f)
-        

@@ -1,17 +1,17 @@
-import unittest
 import sys
-
-sys.path.append('../pyqcd')
+import unittest
 
 import numpy as np
+
 from pyqcd.gates import U3
-from pyqcd.math_utils import *
+from pyqcd.math_utils import d1, d2, tr_distance
+
 
 class TestMathUtils(unittest.TestCase):
     def test_tr_distance(self):
         params = np.random.rand(3)
         a = U3(*params).to_matrix()
-        
+
         params = np.random.rand(3)
         b = U3(*params).to_matrix()
 

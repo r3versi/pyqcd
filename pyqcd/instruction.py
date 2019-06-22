@@ -1,25 +1,32 @@
 import typing
 import numpy as np
+from copy import deepcopy
 
-from .gates import Gate
+from pyqcd.gates import Gate
+
 
 class Instruction:
     """Quantum Instruction class, stores instruction type, target qubits and optional real parameters"""
+
     def __init__(self,
                  gate: Gate,
                  qubits: typing.Sequence[int],
                  params: typing.Optional[typing.Sequence[float]] = None) -> None:
         """Initialize a quantum instruction
-        
+
         Arguments:
             gate {Gate} -- Gate derived class
             qubits {typing.Sequence[int]} -- sequence of target qubits
             params {typing.Optional[typing.Sequence[float]]} -- sequence of params (default: {None})
-        
+
         """
         self.gate = gate
         self.qubits = qubits
         self.params = params
+
+    def clone(self) -> "Instruction":
+        """Return a clone"""
+        return Instruction(self.gate, deepcopy(self.qubits), deepcopy(self.params))
 
     def n_qubits(self) -> int:
         """Return number of qubits"""

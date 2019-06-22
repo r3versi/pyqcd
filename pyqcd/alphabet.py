@@ -1,24 +1,27 @@
 import typing
+
 import numpy as np
 
-from .gates import Gate
-from .instruction import Instruction
+from pyqcd.gates import Gate
+from pyqcd.instruction import Instruction
+
 
 class Alphabet(object):
-    """An object to represent a set S of quantum instructions acting on Q qubits"""
+    """An object to represent a set S of quantum
+    instructions acting on Q qubits"""
 
     def __init__(self, Q: int) -> None:
         """Initialize an Alphabet, a collection of gates
-        
+
         Arguments:
-            Q {int} -- number of qubits        
+            Q {int} -- number of qubits
         """
         self.Q = Q
         self.gates: typing.List[Gate] = []
 
     def register_gates(self, gates: typing.Sequence[Gate]):
         """Registers a gate
-        
+
         Arguments:
             gate {Gate} -- an object derived from class Gate
         """

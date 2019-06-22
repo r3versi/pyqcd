@@ -1,11 +1,11 @@
-import pickle
-import numpy as np
-import matplotlib.pyplot as plt
-
 import os
+import pickle
 from pathlib import Path
 
-solvers = ["GA", "GLOA", "MLOA"]
+import matplotlib.pyplot as plt
+import numpy as np
+
+solvers = ["GA", "GLOA", "MLOA", "MLOA2"]
 results = {}
 
 for solver in solvers:

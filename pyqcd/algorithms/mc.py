@@ -19,9 +19,7 @@ class MC(BaseSearch):
         super().__init__(target, alphabet, circuit_size, mat_dist)
 
     def stats(self) -> typing.Dict:
-        res = {}
-        res['best_fit'] = self.best.score if self.best is not None else None
-        res['n_evals'] = self.n_evals
+        res = super().stats()
         return res
 
     def evolve(self) -> None:

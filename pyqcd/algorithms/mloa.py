@@ -30,7 +30,8 @@ class MLOA(GLOA):
         super().__init__(target, alphabet, n_groups,
                          group_size, circuit_size, weights, mat_dist)
 
-        self.n_migrations = 0
+        # Extra stats initialization
+        self.n_refs = 0
 
     def evolve(self) -> None:
         # Determine group leaders
@@ -49,7 +50,7 @@ class MLOA(GLOA):
 
     def stats(self) -> typing.Dict:
         res = super().stats()
-        res['n_migrations'] = self.n_migrations
+        res['n_refs'] = self.n_refs
         return res
 
     def migration(self) -> None:
@@ -72,7 +73,7 @@ class MLOA(GLOA):
 
                 if new.score < self.groups[i][j].score:
                     self.groups[i][j] = new
-                    self.n_migrations += 1
+                    self.n_migs += 1
 
     def refinement(self, n_selections: int = 1, n_iters: int = 10) -> None:
         for group in self.groups:
@@ -99,5 +100,6 @@ class MLOA(GLOA):
             if new.score < circuit.score:
                 circuit.instructions = new.instructions
                 circuit.score = new.score
+                self.n_refs += 1
 
         return circuit

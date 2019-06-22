@@ -32,12 +32,18 @@ class GA(BaseSearch):
         self.pop = [self.get_random_circuit() for _ in range(self.pop_size)]
         self.compute_fitness()
 
+        # Extra stats initialization
+        self.n_muts = 0
+        self.n_cxs = 0
+        self.n_fixs = 0
+
     def stats(self) -> typing.Dict:
-        res = {}
-        res['best_fit'] = self.best.score if self.best is not None else None
+        res = super().stats()
         res['mean_fit'] = np.mean([x.score for x in self.pop])
         res['mean_len'] = np.mean([len(x) for x in self.pop])
-        res['n_evals'] = self.n_evals
+        res['n_muts'] = self.n_muts
+        res['n_cxs'] = self.n_cxs
+        res['n_fixs'] = self.n_fixs
         return res
 
     def evolve(self) -> None:
@@ -82,6 +88,7 @@ class GA(BaseSearch):
             if len(p) == 0:
                 self.pop[idx] = self.get_random_circuit()
                 self.pop[idx].score = self.fitness(self.pop[idx])
+                self.n_fixs += 1
 
     def compute_fitness(self) -> None:
         """Compute fitness for all individuals not yet scored"""
@@ -124,6 +131,8 @@ class GA(BaseSearch):
 
         p.score = None
 
+        self.n_muts += 1
+
         return p
 
     def mate(self, p0: Circuit, p1: Circuit) -> typing.Tuple[Circuit]:
@@ -134,6 +143,8 @@ class GA(BaseSearch):
 
         p0.score = None
         p1.score = None
+
+        self.n_cxs += 1
 
         return p0, p1
 

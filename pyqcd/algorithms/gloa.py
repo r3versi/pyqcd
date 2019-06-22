@@ -36,17 +36,20 @@ class GLOA(BaseSearch):
 
         self.groups = [[self.get_random_circuit()
                         for _ in range(self.group_size)] for _ in range(self.n_groups)]
-
         self.compute_fitness()
 
+        # Extra stats initialization
+        self.n_muts = 0
+        self.n_migs = 0
+
     def stats(self) -> typing.Dict:
-        res = {}
-        res['best_fit'] = self.best.score if self.best is not None else None
+        res = super().stats()
 
         for idx, group in enumerate(self.groups):
             res["mean_fit_%d" % idx] = np.mean([x.score for x in group])
 
-        res['n_evals'] = self.n_evals
+        res['n_muts'] = self.n_muts
+        res['n_migs'] = self.n_migs
         return res
 
     def evolve(self) -> None:
@@ -81,6 +84,7 @@ class GLOA(BaseSearch):
 
                 if new_circuit.score < p.score:
                     self.groups[gid][idx] = new_circuit
+                    self.n_muts += 1
 
     def migration(self) -> None:
         """Perform one-way-crossover: unidirectional migration between different groups"""
@@ -101,6 +105,7 @@ class GLOA(BaseSearch):
                 # Substitute the individual if new is fittest
                 if new.score < self.groups[x][j].score:
                     self.groups[x][j] = new
+                    self.n_migs += 1
 
     def combine(self, current: Circuit, leader: Circuit, random: Circuit) -> Circuit:
         """Generate a new circuit combining current, leader and random"""

@@ -42,3 +42,8 @@ def QFT(Q: int) -> np.ndarray:
     mat = np.array([[w**(i*j) for j in range(2**Q)]
                     for i in range(2**Q)], dtype=complex)/np.sqrt(2**Q)
     return mat
+
+
+def Grover(Q: int) -> np.ndarray:
+    A = np.full((2**Q, 2**Q), 1/2**Q, dtype=complex)
+    return 2*A - Identity(Q)

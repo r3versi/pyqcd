@@ -90,8 +90,8 @@ class MLOA(GLOA):
 
             for instr in new.instructions:
                 if instr.n_params():
-                    instr.params = self.alphabet.get_random_angles(
-                        instr.n_params())
+                    instr.params = instr.params + \
+                        self.alphabet.get_random_angles(instr.n_params())/4
                     new.score = None
 
             if new.score is None:

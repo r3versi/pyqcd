@@ -15,6 +15,7 @@ class MLOA(GLOA):
                  group_size: int,
                  circuit_size: int,
                  weights: np.ndarray = np.array([0.7, 0.15, 0.15]),
+                 ref_pb: float = 0.25,
                  mat_dist: typing.Callable = tr_distance) -> None:
         """        
         Arguments:
@@ -30,6 +31,7 @@ class MLOA(GLOA):
         super().__init__(target, alphabet, n_groups,
                          group_size, circuit_size, weights, mat_dist)
 
+        self.ref_pb = ref_pb
         # Extra stats initialization
         self.n_refs = 0
 
@@ -89,7 +91,7 @@ class MLOA(GLOA):
             new = circuit.clone()
 
             for instr in new.instructions:
-                if instr.n_params():
+                if instr.n_params() and np.random.rand() < self.ref_pb:
                     instr.params = instr.params + \
                         self.alphabet.get_random_angles(instr.n_params())/4
                     new.score = None

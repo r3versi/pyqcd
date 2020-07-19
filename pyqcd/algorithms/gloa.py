@@ -35,7 +35,6 @@ class GLOA(BaseSearch):
         
         self.compute_fitness()
 
-
     def stats(self) -> typing.Dict:
         res = {}
         res['best_fit'] = self.best.score if self.best is not None else None

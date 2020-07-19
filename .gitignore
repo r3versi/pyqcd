@@ -1,5 +1,7 @@
 data/
+scripts/
 
 .ipynb_checkpoints/
+.idea/
 .vscode/
 __pycache__/

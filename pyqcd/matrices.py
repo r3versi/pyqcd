@@ -47,3 +47,9 @@ def QFT(Q: int) -> np.ndarray:
 def Grover(Q: int) -> np.ndarray:
     A = np.full((2**Q, 2**Q), 1/2**Q, dtype=complex)
     return 2*A - Identity(Q)
+
+
+def random_unitary(Q: int) -> np.ndarray:
+    from qiskit.quantum_info import random_unitary
+
+    return random_unitary(2**Q).data

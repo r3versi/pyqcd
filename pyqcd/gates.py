@@ -89,6 +89,57 @@ class Z(Gate):
         return matrices.Z
 
 
+class RX(Gate):
+    name = "rx"
+    n_qubits = 1
+    n_params = 1
+
+    def __init__(self, a: float):
+        super().__init__("rx", 1, [a])
+
+    def to_matrix(self) -> np.ndarray:
+        a = float(self.params[0])
+        return np.array(
+            [
+                [np.cos(a/2), -1j*np.sin(a/2)],
+                [-1j*np.sin(a/2), np.cos(a/2)]
+            ], dtype=complex)
+
+
+class RY(Gate):
+    name = "ry"
+    n_qubits = 1
+    n_params = 1
+
+    def __init__(self, a: float):
+        super().__init__("ry", 1, [a])
+
+    def to_matrix(self) -> np.ndarray:
+        a = float(self.params[0])
+        return np.array(
+            [
+                [np.cos(a/2), -np.sin(a/2)],
+                [np.sin(a/2), np.cos(a/2)]
+            ], dtype=complex)
+
+
+class RZ(Gate):
+    name = "rz"
+    n_qubits = 1
+    n_params = 1
+
+    def __init__(self, a: float):
+        super().__init__("rz", 1, [a])
+
+    def to_matrix(self) -> np.ndarray:
+        a = float(self.params[0])
+        return np.array(
+            [
+                [np.exp(-1j*a/2), 0],
+                [0, np.exp(1j*a/2)]
+            ], dtype=complex)
+
+
 class H(Gate):
     name = "h"
     n_qubits = 1

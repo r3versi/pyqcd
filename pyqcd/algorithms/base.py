@@ -97,3 +97,15 @@ class BaseSearch:
             self.best = circuit.clone()
             # print("New best @ gen %d, score %0.5f\n%s" %
             #      (self.gen, self.best.score, self.best))
+
+    def end(self) -> None:
+
+        print("=============================")
+        print("Generations %d" % self.gen)
+        print("Fitness evals %d" % self.n_evals)
+        print("Score %0.2f" % self.best.score)
+        print("%s" % self.best)
+        print("=============================")
+
+        with open('best.qasm', 'w') as f:
+            f.write(self.best.to_qasm())

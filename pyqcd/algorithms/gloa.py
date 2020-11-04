@@ -38,6 +38,13 @@ class GLOA(BaseSearch):
                         for _ in range(self.group_size)] for _ in range(self.n_groups)]
         self.compute_fitness()
 
+        # Determine group leaders
+        leaders = [min(group, key=lambda x: x.score) for group in self.groups]
+        # Determine overall leader
+        best = min(leaders, key=lambda x: x.score)
+        # Set it as best if so
+        self.update_best(best)
+
         # Extra stats initialization
         self.n_muts = 0
         self.n_migs = 0
@@ -53,17 +60,17 @@ class GLOA(BaseSearch):
         return res
 
     def evolve(self) -> None:
+        # Next generation
+        self.mutation()
+        self.migration()
+        self.gen += 1
+
         # Determine group leaders
         leaders = [min(group, key=lambda x: x.score) for group in self.groups]
         # Determine overall leader
         best = min(leaders, key=lambda x: x.score)
         # Set it as best if so
         self.update_best(best)
-
-        # Next generation
-        self.mutation()
-        self.migration()
-        self.gen += 1
 
     def compute_fitness(self) -> None:
         for group in self.groups:

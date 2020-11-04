@@ -107,5 +107,5 @@ class BaseSearch:
         print("%s" % self.best)
         print("=============================")
 
-        with open('best.qasm', 'w') as f:
-            f.write(self.best.to_qasm())
+        # with open('best.qasm', 'w') as f:
+        #    f.write(self.best.to_qasm())

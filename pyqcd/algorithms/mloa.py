@@ -36,19 +36,18 @@ class MLOA(GLOA):
         self.n_refs = 0
 
     def evolve(self) -> None:
+        # Next generation
+        self.mutation()
+        self.migration()
+        self.refinement()
+        self.gen += 1
+
         # Determine group leaders
         leaders = [min(group, key=lambda x: x.score) for group in self.groups]
         # Determine overall leader
         best = min(leaders, key=lambda x: x.score)
         # Set it as best if so
         self.update_best(best)
-
-        # Next generation
-        self.mutation()
-        self.migration()
-        self.refinement()
-
-        self.gen += 1
 
     def stats(self) -> typing.Dict:
         res = super().stats()

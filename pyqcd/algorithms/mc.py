@@ -25,6 +25,6 @@ class MC(BaseSearch):
     def evolve(self) -> None:
         new = self.get_random_circuit()
         new.score = self.fitness(new)
+        self.gen += 1
 
         self.update_best(new)
-        self.gen += 1

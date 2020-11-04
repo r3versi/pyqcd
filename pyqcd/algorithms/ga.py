@@ -47,13 +47,12 @@ class GA(BaseSearch):
         return res
 
     def evolve(self) -> None:
-        best = min(self.pop, key=lambda x: x.score)
-        self.update_best(best)
-
         self.fixing()
         self.new_generation()
-
         self.gen += 1
+
+        best = min(self.pop, key=lambda x: x.score)
+        self.update_best(best)
 
     def new_generation(self) -> None:
         """One evolution step"""
